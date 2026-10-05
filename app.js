@@ -2306,10 +2306,13 @@ function syncCustomerFields() {
 function customerDetailsNext() {
   syncCustomerFields();
   const c = ui.customer;
-  if (!c.name || !c.phone || !c.instagram) { showToast(t("requiredContact")); return; }
+  if (!c.name || !c.phone) { showToast(t("requiredContact")); return; }
   if (!isValidName(c.name)) { showToast(t("invalidName")); return; }
   if (!isValidPhone(c.phone)) { showToast(t("invalidPhone")); return; }
-  if (!isValidInstagram(c.instagram)) { showToast(t("invalidInstagram")); return; }
+  // Operator requirement: Instagram is optional. An empty value skips format
+  // validation entirely and proceeds; if the customer DID type something, the
+  // existing format rule still applies unchanged.
+  if (c.instagram && !isValidInstagram(c.instagram)) { showToast(t("invalidInstagram")); return; }
   ui.customer.step = 4; render();
 }
 // Maps the raw row returned by the real create_customer_booking RPC
