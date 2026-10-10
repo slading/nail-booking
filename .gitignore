@@ -1,2 +1,3 @@
 .vercel
 tests/node_modules/
+backend/proposed/node_modules/
