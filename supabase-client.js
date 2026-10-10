@@ -593,7 +593,8 @@ async function staffUpdateAppointmentContact(appointmentId, fields) {
   // value; undefined means "leave the stored value untouched". An empty string is
   // an explicit clear and is stored as NULL: this direct UPDATE bypasses
   // create_customer_booking's normalization, and the appointments CHECK constraint
-  // rejects ''.
+  // rejects ''. That CHECK constraint was verified against the production Supabase
+  // schema; it is not defined in this repository.
   if (fields.instagram !== undefined) update.customer_instagram = fields.instagram || null;
   const { error } = await supabaseClient.from("appointments").update(update).eq("id", appointmentId);
   if (error) throw error;
