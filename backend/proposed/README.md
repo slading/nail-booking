@@ -8,19 +8,19 @@ The earlier helper-function proposal has been removed. It is replaced by a singl
 
 One block of SQL, `insertion-block.sql`, is inserted into the existing function. Nothing else in the function changes. The function is not recreated or rewritten here.
 
-The block rejects a Modelace booking with `p_design_mode = 'combo'` when `p_reference_photo_path` is NULL, empty, or whitespace-only. It raises `N2D12`.
+The block rejects `p_design_mode = 'combo'` when `p_reference_photo_path` is NULL, empty, or whitespace-only. It raises `N2D12`. It uses only the two parameters and needs no variable from the existing function. Combo is valid only for Modelace, which the existing function already enforces.
 
 ## Insertion location
 
 Insert the block:
 
 - **Inside** the function's main body. Do not place it in a nested `BEGIN ... EXCEPTION` sub-block.
-- **After** the service category variable has been assigned. The function reads the service row earlier, so the variable should already be set. Confirm this in the definition.
+- Both parameters are function arguments, so they are available at the start of the body.
 - **Immediately before** the existing Storage photo-existence check, which raises `N2D07`.
 
 This location is also before `pg_advisory_xact_lock(...)`, the slot re-check, and the insert, because the photo check runs before the lock in the existing order. A rejected request therefore inserts nothing and takes no lock.
 
-The placeholder `<service_category_variable>` must be replaced with the real variable name from the definition. Nothing else needs to be substituted.
+No placeholder remains. Nothing needs to be substituted.
 
 ## Error codes
 
@@ -33,11 +33,10 @@ One check remains before applying: a case-sensitive search for `N2D12` in the de
 
 ## Review checklist
 
-1. Replace `<service_category_variable>` with the variable name used in the definition.
-2. Confirm the insertion point is at the function's top level and after the category assignment.
-3. Confirm `N2D12` does not appear elsewhere in the definition.
-4. Confirm the parameter names `p_design_mode` and `p_reference_photo_path` match the definition (the frontend sends these names).
-5. Confirm the existing `N2D07` check is the next statement after the insertion point.
+1. Confirm the insertion point is at the function's top level, immediately before the existing `N2D07` check.
+2. Confirm `N2D12` does not appear elsewhere in the definition.
+3. Confirm the parameter names `p_design_mode` and `p_reference_photo_path` match the definition (the frontend sends these names).
+4. Confirm the existing combo/Modelace rule (`N2D05`/`N2D06`) runs before the insertion point. If it runs after, a non-Modelace combo with no photo gets `N2D12` instead of the existing code. The request is still rejected either way, with nothing inserted.
 
 ## Staging verification (not run)
 
@@ -92,6 +91,6 @@ Regression tests N1 (N2D12 shows the required-photo message), N2 (generic errors
 ## Remaining risks
 
 - **Not enforced until applied.** Until the block is inserted and the function is redeployed, a direct RPC call can still create a combo booking without a photo.
-- **Category variable.** The rule depends on the variable holding `'modelace'`. Confirm the stored spelling matches (this is part of the review checklist).
+- **Combo/Modelace ordering.** The block does not check the service category. It relies on the existing function rejecting combo for non-Modelace services (checklist item 4).
 - **Staging not run.** The duration (+30) and concurrency results come from the definition review. They have not been re-verified by running them against a database.
 - **Frontend mapping applied in this patch.** It is only reached by clients that bypass the frontend check; the server rule itself is still not applied (see the first risk).
