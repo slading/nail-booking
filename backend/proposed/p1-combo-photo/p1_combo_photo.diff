@@ -1,0 +1,19 @@
+--- a/rollback_create_customer_booking_original.sql
++++ b/up_create_customer_booking_p1_combo_photo.sql
+@@ -89,6 +89,16 @@
+   v_total_price := v_service.price_czk + v_add_ons_total;
+   v_total_price_from := v_service.price_from or (jsonb_array_length(v_add_ons) > 0);
+ 
++  -- P1: Design + inspiration requires a reference photo.
++  if p_design_mode = 'combo'
++     and nullif(
++       regexp_replace(coalesce(p_reference_photo_path, ''), '\s', '', 'g'),
++       ''
++     ) is null then
++    raise exception 'Reference photo is required for Design + inspiration'
++      using errcode = 'N2D12';
++  end if;
++
+   if p_reference_photo_path is not null and not exists (
+     select 1 from storage.objects where bucket_id = 'reference-photos' and name = p_reference_photo_path
+   ) then

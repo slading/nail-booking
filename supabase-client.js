@@ -583,13 +583,20 @@ async function staffRescheduleAppointment(appointmentId, newDate, newStartTime) 
 // date/time/price/snapshot fields outside the RPCs above.
 async function staffUpdateAppointmentContact(appointmentId, fields) {
   if (!supabaseClient) throw new Error("no-client");
-  const { error } = await supabaseClient.from("appointments").update({
+  const update = {
     customer_name: fields.name,
     customer_phone: fields.phone,
-    customer_instagram: fields.instagram,
     customer_notes: fields.notes || null,
     reminder_requested: !!fields.reminder,
-  }).eq("id", appointmentId);
+  };
+  // Instagram is optional (P1). Write the column only when the caller supplied a
+  // value; undefined means "leave the stored value untouched". An empty string is
+  // an explicit clear and is stored as NULL: this direct UPDATE bypasses
+  // create_customer_booking's normalization, and the appointments CHECK constraint
+  // rejects ''. That CHECK constraint was verified against the production Supabase
+  // schema; it is not defined in this repository.
+  if (fields.instagram !== undefined) update.customer_instagram = fields.instagram || null;
+  const { error } = await supabaseClient.from("appointments").update(update).eq("id", appointmentId);
   if (error) throw error;
 }
 
