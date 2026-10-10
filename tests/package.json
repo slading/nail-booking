@@ -1,0 +1,11 @@
+{
+  "name": "nail-booking-tests",
+  "private": true,
+  "description": "Focused regression tests for the static booking app. Kept in its own package so the root (deployed as static files) is unchanged.",
+  "scripts": {
+    "test": "node --test regression.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.2"
+  }
+}

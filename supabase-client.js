@@ -583,13 +583,16 @@ async function staffRescheduleAppointment(appointmentId, newDate, newStartTime) 
 // date/time/price/snapshot fields outside the RPCs above.
 async function staffUpdateAppointmentContact(appointmentId, fields) {
   if (!supabaseClient) throw new Error("no-client");
-  const { error } = await supabaseClient.from("appointments").update({
+  const update = {
     customer_name: fields.name,
     customer_phone: fields.phone,
-    customer_instagram: fields.instagram,
     customer_notes: fields.notes || null,
     reminder_requested: !!fields.reminder,
-  }).eq("id", appointmentId);
+  };
+  // Instagram is optional (P1). Write the column only when the caller supplied a
+  // value; undefined means "leave the stored value untouched".
+  if (fields.instagram !== undefined) update.customer_instagram = fields.instagram;
+  const { error } = await supabaseClient.from("appointments").update(update).eq("id", appointmentId);
   if (error) throw error;
 }
 
