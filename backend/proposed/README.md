@@ -2,6 +2,21 @@
 
 **Status: PROPOSED. NOT APPLIED. NOT DEPLOYED. No SQL has been executed for this version.**
 
+## Deployable artifacts (supersede the block-only file)
+
+Directory `backend/proposed/p1-combo-photo/`:
+
+- `up_create_customer_booking_p1_combo_photo.sql`: complete `CREATE OR REPLACE FUNCTION`, built from the supplied production definition with the validation block inserted.
+- `rollback_create_customer_booking_original.sql`: the exact supplied production definition, for rollback.
+- `p1_combo_photo.diff`: unified diff between the two. It contains only the 9 inserted lines plus one blank line.
+
+Both SQL files end with `;`, the statement terminator that `pg_get_functiondef` omits. It is identical in both files. Nothing has been executed.
+
+Verified from the supplied definition (`VERIFIED IN PRODUCTION SOURCE`, not run):
+- The Modelace branch validates `p_design_mode` (N2D05, N2D06) before the new block.
+- For non-Modelace services the `else` branch sets `p_design_mode := null` before the block, so the block never fires for them.
+- The block sits after the duration/price calculation and before the N2D07 check, so it runs before the advisory lock, `is_slot_bookable`, and the INSERT.
+
 The earlier helper-function proposal has been removed. It is replaced by a single inline validation block inside the existing `public.create_customer_booking`.
 
 ## What changes
@@ -36,7 +51,7 @@ One check remains before applying: a case-sensitive search for `N2D12` in the de
 1. Confirm the insertion point is at the function's top level, immediately before the existing `N2D07` check.
 2. Confirm `N2D12` does not appear elsewhere in the definition.
 3. Confirm the parameter names `p_design_mode` and `p_reference_photo_path` match the definition (the frontend sends these names).
-4. Confirm the existing combo/Modelace rule (`N2D05`/`N2D06`) runs before the insertion point. If it runs after, a non-Modelace combo with no photo gets `N2D12` instead of the existing code. The request is still rejected either way, with nothing inserted.
+4. Confirm the existing combo/Modelace rule (`N2D05`/`N2D06`) runs before the insertion point. Verified in the supplied definition (see above).
 
 ## Staging verification (not run)
 
@@ -91,6 +106,6 @@ Regression tests N1 (N2D12 shows the required-photo message), N2 (generic errors
 ## Remaining risks
 
 - **Not enforced until applied.** Until the block is inserted and the function is redeployed, a direct RPC call can still create a combo booking without a photo.
-- **Combo/Modelace ordering.** The block does not check the service category. It relies on the existing function rejecting combo for non-Modelace services (checklist item 4).
+- **Combo/Modelace ordering.** Resolved from the supplied definition: the block runs after the Modelace validation and after non-Modelace services have `p_design_mode` nulled, so it cannot change their behaviour.
 - **Staging not run.** The duration (+30) and concurrency results come from the definition review. They have not been re-verified by running them against a database.
 - **Frontend mapping applied in this patch.** It is only reached by clients that bypass the frontend check; the server rule itself is still not applied (see the first risk).
