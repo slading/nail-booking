@@ -174,6 +174,63 @@ test("D2: non-Modelace photo upload failure keeps the original message that allo
   } finally { app.close(); }
 });
 
+// --------------------------------------- P1: N2D12 server rejection mapping ----
+// The client check would normally stop a photo-less combo first, so these tests
+// simulate the server rejecting the request (the backend rule is the authority).
+test("N1: a server N2D12 (reference photo required) shows the required-photo message, not the connection error", async () => {
+  const app = await loadApp({ language: "cs" });
+  try {
+    app.supabase.handlers.rpc.create_customer_booking = async () => ({
+      data: null, error: Object.assign(new Error("Reference photo is required for Design + inspiration"), { code: "N2D12" }),
+    });
+    await openModelace(app, { length: "short", designMode: "combo", photo: TINY_JPEG });
+    clickAction(app, "continue-manicure");
+    await app.flush();
+    setCustomer(app, { date: DATE, start: START, step: 4, name: "Anna", phone: "+420 601 100 221" });
+    clickAction(app, "confirm-booking");
+    await app.flush(10);
+    assert.equal(bookingRpcs(app).length, 1, "the RPC was called and rejected");
+    assert.equal(app.toast(), COPY.cs.referencePhotoRequiredMessage);
+    assert.notEqual(app.toast(), app.eval('t("bookingNetworkError")'), "must not say 'check your internet connection'");
+    assert.equal(app.eval("ui.customer.step"), 4, "stays on review so the customer can go back and add a photo");
+    assert.equal(app.eval("ui.customer.confirmedAppointment") ?? null, null, "no confirmation is shown");
+    assert.equal(app.eval("customerBookingInFlight"), false, "submit flag reset so the user can retry");
+  } finally { app.close(); }
+});
+
+test("N2: a generic RPC failure still shows the connection error (N2D12 mapping does not swallow other errors)", async () => {
+  const app = await loadApp({ language: "cs" });
+  try {
+    app.supabase.handlers.rpc.create_customer_booking = async () => ({
+      data: null, error: Object.assign(new Error("network down"), { code: "PGRST000" }),
+    });
+    await openModelace(app, { length: "short", designMode: "combo", photo: TINY_JPEG });
+    clickAction(app, "continue-manicure");
+    await app.flush();
+    setCustomer(app, { date: DATE, start: START, step: 4, name: "Anna", phone: "+420 601 100 221" });
+    clickAction(app, "confirm-booking");
+    await app.flush(10);
+    assert.equal(app.toast(), app.eval('t("bookingNetworkError")'));
+  } finally { app.close(); }
+});
+
+test("N3: N2D08 (slot taken) still returns the customer to the time step with the slot message", async () => {
+  const app = await loadApp({ language: "cs" });
+  try {
+    app.supabase.handlers.rpc.create_customer_booking = async () => ({
+      data: null, error: Object.assign(new Error("slot unavailable"), { code: "N2D08" }),
+    });
+    await openModelace(app, { length: "short", designMode: "combo", photo: TINY_JPEG });
+    clickAction(app, "continue-manicure");
+    await app.flush();
+    setCustomer(app, { date: DATE, start: START, step: 4, name: "Anna", phone: "+420 601 100 221" });
+    clickAction(app, "confirm-booking");
+    await app.flush(10);
+    assert.equal(app.eval("ui.customer.step"), 2);
+    assert.equal(app.toast(), app.eval('t("slotUnavailable")'));
+  } finally { app.close(); }
+});
+
 test("E: Design + inspiration copy is correct in English", async () => {
   const app = await loadApp({ language: "en" });
   try {
@@ -307,7 +364,7 @@ test("H: staff editing without Instagram can save; an empty stored value is show
   } finally { app.close(); }
 });
 
-test("H2: staff editing can clear an existing Instagram explicitly (empty string, same as the customer flow)", async () => {
+test("H2: staff clearing an existing Instagram writes NULL to appointments, never '' (CHECK rejects '')", async () => {
   const app = await loadApp({ language: "cs" });
   try {
     openEditModal(app, { instagram: "@anna.demo" });
@@ -316,7 +373,23 @@ test("H2: staff editing can clear an existing Instagram explicitly (empty string
     clickAction(app, "save-edit-appointment");
     await app.flush(10);
     const update = app.supabase.calls.update.find((u) => u.table === "appointments");
-    assert.equal(update.values.customer_instagram, "");
+    assert.ok(update, "appointment update sent");
+    assert.equal("customer_instagram" in update.values, true, "clear is an explicit write, not an untouched column");
+    assert.strictEqual(update.values.customer_instagram, null);
+    assert.notStrictEqual(update.values.customer_instagram, "");
+  } finally { app.close(); }
+});
+
+test("H3: staff editing a non-empty Instagram still saves the trimmed value unchanged (no NULL coercion)", async () => {
+  const app = await loadApp({ language: "cs" });
+  try {
+    openEditModal(app, { instagram: "@anna.demo" });
+    await app.flush();
+    app.$("#editInstagram").value = "  @anna.new  ";
+    clickAction(app, "save-edit-appointment");
+    await app.flush(10);
+    const update = app.supabase.calls.update.find((u) => u.table === "appointments");
+    assert.equal(update.values.customer_instagram, "@anna.new");
   } finally { app.close(); }
 });
 

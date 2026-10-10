@@ -2460,6 +2460,9 @@ function confirmCustomerBooking() {
       // reloaded step 2 exactly like the old cross-tab conflict path did.
       if (err?.code === "N2D08") {
         c.step = 2; c.start = null; render(); showToast(t("slotUnavailable"));
+      } else if (err?.code === "N2D12") {
+        // P1: server rejected Design + inspiration without a reference photo.
+        render(); showToast(t("photoRequiredMessage"));
       } else {
         render();
         showToast(t("bookingNetworkError"));

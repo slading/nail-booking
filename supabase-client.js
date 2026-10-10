@@ -590,8 +590,11 @@ async function staffUpdateAppointmentContact(appointmentId, fields) {
     reminder_requested: !!fields.reminder,
   };
   // Instagram is optional (P1). Write the column only when the caller supplied a
-  // value; undefined means "leave the stored value untouched".
-  if (fields.instagram !== undefined) update.customer_instagram = fields.instagram;
+  // value; undefined means "leave the stored value untouched". An empty string is
+  // an explicit clear and is stored as NULL: this direct UPDATE bypasses
+  // create_customer_booking's normalization, and the appointments CHECK constraint
+  // rejects ''.
+  if (fields.instagram !== undefined) update.customer_instagram = fields.instagram || null;
   const { error } = await supabaseClient.from("appointments").update(update).eq("id", appointmentId);
   if (error) throw error;
 }

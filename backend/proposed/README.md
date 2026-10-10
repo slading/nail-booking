@@ -60,7 +60,7 @@ Remove the inserted block, restoring the previous function definition. The chang
 
 ## Frontend mapping for `N2D12`
 
-Currently `confirmCustomerBooking` in `app.js` has one special case for `N2D08`. Every other error falls through to `bookingNetworkError`, which tells the customer to check their connection. An `N2D12` would show that misleading message.
+Before this patch, `confirmCustomerBooking` in `app.js` had one special case for `N2D08`. Every other error fell through to `bookingNetworkError`, which tells the customer to check their connection. An `N2D12` would have shown that misleading message. **This patch now adds the `N2D12` branch** (`app.js`, in the `confirmCustomerBooking` catch).
 
 The minimal change is one extra branch in the same `catch`:
 
@@ -79,14 +79,14 @@ The minimal change is one extra branch in the same `catch`:
 
 Optional, not required for P1: `N2D07` could map to `photoUploadErrorRequired`, since a missing object means the photo upload did not succeed. It currently falls through to the connection message.
 
-A regression test for the mapping should stub the RPC to reject with `{ code: "N2D12" }` and assert that the required-photo message is shown. This test does not exist yet.
+Regression tests N1 (N2D12 shows the required-photo message), N2 (generic errors still show the connection message) and N3 (N2D08 unchanged) cover this in `tests/regression.test.mjs`.
 
 ## Frontend compatibility
 
 - The frontend blocks a Modelace combo booking without a photo before any upload or RPC call. Under normal use, `N2D12` should not occur.
 - The frontend sends `null` when no photo is attached and never sends an empty string for the path. The block handles both.
 - Instagram: the reviewed definition accepts NULL and empty strings and normalizes empty to NULL. This resolves the earlier open question for the customer flow.
-- Staff edit writes `customer_instagram` directly to `appointments`, not through `create_customer_booking`. Clearing Instagram there stores `""`, not NULL. This is a minor inconsistency. Display handles both values, so no functional impact was found.
+- Staff edit writes `customer_instagram` directly to `appointments`, not through `create_customer_booking`. **This patch normalizes an empty value to `null`** (`supabase-client.js`, `staffUpdateAppointmentContact`), so the direct write never sends `""`. The reason given is that the `appointments` CHECK constraint rejects `''`. That constraint is not in this repository and was not verified in this sandbox; the normalization is safe regardless.
 - Staff booking uses `create_staff_booking`, which this change does not touch.
 
 ## Remaining risks
@@ -94,4 +94,4 @@ A regression test for the mapping should stub the RPC to reject with `{ code: "N
 - **Not enforced until applied.** Until the block is inserted and the function is redeployed, a direct RPC call can still create a combo booking without a photo.
 - **Category variable.** The rule depends on the variable holding `'modelace'`. Confirm the stored spelling matches (this is part of the review checklist).
 - **Staging not run.** The duration (+30) and concurrency results come from the definition review. They have not been re-verified by running them against a database.
-- **Frontend mapping not applied.** Without the mapping, an `N2D12` shows a misleading connection message. This matters only for clients that bypass the frontend check.
+- **Frontend mapping applied in this patch.** It is only reached by clients that bypass the frontend check; the server rule itself is still not applied (see the first risk).
