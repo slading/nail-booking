@@ -52,6 +52,16 @@ The staff/manager dashboard (Kalendář salonu) is now backed by the same real S
 - **localStorage is no longer authoritative for staff/production data.** The local demo dataset (`createDemoState()`/`saveState()`/"Reset demo") is left in place unchanged, but is no longer reachable from the staff view at all once a manager is signed in — `renderStaff()` re-bridges `state` to the real Supabase data on every render, so clicking "Reset demo" while looking at the real calendar cannot leak fake data into it (verified) and never touches Supabase.
 - **Known hard limit:** `staff_profiles` has no rows in the production project yet (per instructions, no manager account was invented). Until a real manager identity/email is provided and provisioned, the login screen is reachable and correctly rejects everyone, but the fully-authorized happy path cannot be exercised end-to-end with a real login. See the phase closeout notes for exactly how this was verified as thoroughly as possible without inventing an account.
 
+## Cancellation without the reservation number (device memory)
+
+The salon reported that customers often cannot find their reservation number. A phone number alone can never authorise a cancellation (it is public and guessable, so anyone knowing it could cancel anyone's booking), so the ownership model is unchanged: `cancel_appointment_customer` still requires the booking reference **and** the matching phone number, and still enforces the 2-hour cutoff.
+
+What changed is where the reference comes from. A confirmed booking's reference (id, salon, date, start/end, service name and duration — never name, phone, Instagram, notes or photos) is remembered in the **customer's own browser** under the separate `n2d-my-bookings-v1` key. On the cancel screen, upcoming remembered bookings are listed with **Použít číslo rezervace** (fills the reference in) and **Zapomenout** (deletes that entry on this device); the customer then types only their phone number. Entries are pruned on read once the appointment is in the past, the list is capped at 10, and a successful cancellation removes its entry. This is a convenience copy only — it is never a source of truth, never trusted for ownership, and has no backend/schema impact. Cancelling from a different device or browser still requires the reference. Full analysis and the options that were not taken (SMS one-time code, salon-mediated request): `docs/task-1-cancellation-by-phone.md`.
+
+The cancel form also uses its own validation messages (a missing phone number asks for the phone number; a missing reference asks for the reference) instead of the booking form's "name and contact" toast. The booking form's validation is unchanged.
+
+Related: the staff "Adjust day" capacity picker now always includes the day's current capacity value (it previously offered only 1–4, which could silently reset a larger capacity to 1).
+
 ## Confirmed N2D business data in this build
 
 - **Brand:** N2D (replaces the earlier generic "Notebook" placeholder).
