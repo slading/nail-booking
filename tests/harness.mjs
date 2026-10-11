@@ -29,11 +29,26 @@ const CATALOG = {
 };
 
 export function createFakeSupabase() {
-  const calls = { rpc: [], upload: [], update: [] };
+  // `insert`/`upsert`/`delete` were added for the client-feedback regression
+  // tests (blocks / day_overrides write paths). Purely additive: existing tests
+  // never touched those methods, and every pre-existing entry keeps its shape.
+  const calls = { rpc: [], upload: [], update: [], insert: [], upsert: [], delete: [] };
   const handlers = {
     // Each handler may be replaced per-test. Return { data, error } like supabase-js.
     rpc: {
       get_available_slots: async () => ({ data: [], error: null }),
+      // Phase 3C self-cancellation: mirrors the real cancel_appointment_customer
+      // RPC's row shape (the columns app.js's mapRemoteAppointment reads).
+      cancel_appointment_customer: async (args) => ({
+        data: [{
+          id: args.p_appointment_id, salon_id: "orli", service_name_snapshot: "Test",
+          duration_minutes: 60, appointment_date: "2026-10-20", start_time: "10:00:00",
+          end_time: "11:00:00", category_snapshot: "manikura", length_key: null,
+          add_ons_snapshot: [], customer_name: "Anna", customer_phone: args.p_customer_phone,
+          customer_instagram: null, customer_notes: null,
+        }],
+        error: null,
+      }),
       create_customer_booking: async (args) => ({
         data: [{
           id: "booking-1", salon_id: args.p_salon_id, service_name_snapshot: "Test", duration_minutes: 0,
@@ -47,17 +62,38 @@ export function createFakeSupabase() {
       create_staff_booking: async () => ({ data: [{ id: "staff-booking-1" }], error: null }),
     },
     upload: async () => ({ error: null }),
+    // Table write handlers (blocks / day_overrides / services / ...). Replace
+    // per test to simulate a failed write; return { data, error } like supabase-js.
+    insert: async () => ({ data: null, error: null }),
+    upsert: async () => ({ data: null, error: null }),
+    delete: async () => ({ data: null, error: null }),
   };
 
   const query = (table) => {
     const q = {
       _update: null,
+      _insert: null,
+      _upsert: null,
+      _delete: false,
+      _deleteFilters: {},
       select() { return q; },
-      eq(col, val) { if (q._update) q._update.filters[col] = val; return q; },
+      gte() { return q; },
+      lte() { return q; },
+      eq(col, val) {
+        if (q._update) q._update.filters[col] = val;
+        if (q._delete) q._deleteFilters[col] = val;
+        return q;
+      },
       order() { return q; },
       maybeSingle() { return q; },
       update(values) { q._update = { table, values, filters: {} }; calls.update.push(q._update); return q; },
+      insert(values) { q._insert = { table, values }; calls.insert.push(q._insert); return q; },
+      upsert(values, opts) { q._upsert = { table, values, opts }; calls.upsert.push(q._upsert); return q; },
+      delete() { q._delete = true; calls.delete.push({ table, filters: q._deleteFilters }); return q; },
       then(resolve, reject) {
+        if (q._insert) return Promise.resolve(handlers.insert(table, q._insert.values)).then(resolve, reject);
+        if (q._upsert) return Promise.resolve(handlers.upsert(table, q._upsert.values, q._upsert.opts)).then(resolve, reject);
+        if (q._delete) return Promise.resolve(handlers.delete(table, q._deleteFilters)).then(resolve, reject);
         const data = q._update ? null : (CATALOG[table] ?? []);
         return Promise.resolve({ data, error: null }).then(resolve, reject);
       },

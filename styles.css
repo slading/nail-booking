@@ -159,6 +159,18 @@ textarea.input { min-height: 80px; padding-top: 12px; resize: vertical; }
 .review-row:last-child { border: 0; }
 .review-row span:first-child { color: var(--muted); }
 .review-row strong { font-weight: 650; }
+/* Phase 3D — the customer's own remembered bookings on the cancel screen
+   (see app.js rememberMyBooking). Mobile-first: one card per booking, actions
+   wrap under the text on narrow screens instead of forcing a wide row. */
+.my-booking-list { display: grid; gap: 8px; }
+.my-booking-row { padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.my-booking-row.selected { border: 2px solid var(--accent); padding: 9px 11px; background: #fffaf7; }
+.my-booking-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.my-booking-main strong { font-size: 13.5px; }
+.my-booking-main small { color: var(--muted); font-size: 11.5px; }
+.my-booking-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.my-booking-actions .quiet-btn { min-height: 38px; padding: 0 10px; font-size: 12.5px; }
+.my-booking-actions .quiet-btn:disabled { opacity: .6; }
 .confirmation { padding-top: 20px; text-align: center; }
 .confirm-mark { width: 72px; height: 72px; margin: 10px auto 20px; border-radius: 50%; color: #fff; background: var(--sage); display: grid; place-items: center; font-size: 33px; box-shadow: 0 10px 30px rgba(78,101,81,.22); }
 .confirmation .review-card { text-align: left; }

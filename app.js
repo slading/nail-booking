@@ -305,7 +305,21 @@ const STRINGS = {
     // to the vi (staff/admin) block, which is out of scope for this phase.
     haveBookingCancelIt: "Máte rezervaci? Zrušit ji",
     cancelLookupTitle: "Zrušit rezervaci",
-    cancelLookupHint: "Zadejte číslo rezervace a telefon, který jste uvedli při objednání.",
+    cancelLookupHint: "Zadejte číslo rezervace a telefon, který jste uvedli při objednání. Číslo rezervace najdete na potvrzení po objednání.",
+    // Phase 3D — device-local booking memory (cancel screen): the customer's own
+    // bookings, remembered in this browser, so the reservation number does not
+    // have to be hunted for. The phone number is still required and matched
+    // server-side; nothing about the ownership check changes.
+    myBookingsTitle: "Moje rezervace na tomto zařízení",
+    myBookingsUse: "Použít číslo rezervace",
+    myBookingsSelected: "Vybráno",
+    myBookingsForget: "Zapomenout",
+    myBookingsNote: "Uloženo jen v tomto prohlížeči. Číslo rezervace doplníme za vás, telefon ale musíte zadat.",
+    // Dedicated cancel-screen validation (mistake-proofing the copy): the cancel
+    // form must never reuse the booking form's "name and contact" toast, which
+    // talks about a name the cancel screen does not even ask for.
+    cancelLookupPhoneRequired: "Zadejte prosím telefonní číslo, kterým jste se objednali.",
+    cancelLookupReferenceRequired: "Zadejte prosím číslo rezervace.",
     bookingReference: "Číslo rezervace",
     bookingReferencePlaceholder: "Vložte číslo rezervace",
     submitCancelBooking: "Zrušit rezervaci",
@@ -332,7 +346,12 @@ const STRINGS = {
     priceFrom: "from {price} CZK", priceExact: "{price} CZK", addOnsSectionTitle: "Nail art add-ons (optional)", addOnsHint: "Can be added to this service. Some designs add the listed extra time to your appointment.", continueWithSelection: "Continue", servicePrice: "Service price", addOnsChosen: "Add-ons chosen", addOnsTotal: "Add-ons total", totalPrice: "Total", noAddOns: "No add-ons", lengthSectionTitle: "Nail length", lengthHint: "Choose a length before adding nail art.", lengthShort: "Short", lengthMedium: "Medium", lengthLong: "Long", lengthExtraLong: "Extra long", length: "Length", manualLengthRequired: "Choose a nail length first — available times will appear after that.", designModeSectionTitle: "Would you like nail art?", designModeHint: "Choose one option before continuing.", designModeNone: "No design", designModeNoneHint: "Just the selected length, no design.", designModeDesign: "Design", designModeDesignHint: "Choose from the design menu.", designModeCombo: "Design + inspiration", designModeComboHint: "Choose a design and attach an inspiration photo.",
     // Phase 3C — customer self-cancellation (en). Customer UI only; not added
     // to the vi (staff/admin) block, which is out of scope for this phase.
-    haveBookingCancelIt: "Already have a booking? Cancel it", cancelLookupTitle: "Cancel your booking", cancelLookupHint: "Enter your booking reference and the phone number you booked with.", bookingReference: "Booking reference", bookingReferencePlaceholder: "Enter your booking reference", submitCancelBooking: "Cancel booking", cancelLookupWorking: "Cancelling…", cancelLookupNotFound: "We couldn't find a booking matching that reference and phone number.", cancelLookupAlreadyCancelled: "This booking has already been cancelled.", cancelLookupWindowClosed: "Bookings can only be cancelled up to 2 hours before the appointment. Please contact the salon directly.", cancelLookupSuccessTitle: "Booking cancelled", cancelLookupSuccessBody: "Your booking has been cancelled.", cancelLookupBack: "Back to booking",
+    haveBookingCancelIt: "Already have a booking? Cancel it", cancelLookupTitle: "Cancel your booking", cancelLookupHint: "Enter your booking reference and the phone number you booked with. The reference is shown on your booking confirmation.", bookingReference: "Booking reference", bookingReferencePlaceholder: "Enter your booking reference", submitCancelBooking: "Cancel booking", cancelLookupWorking: "Cancelling…", cancelLookupNotFound: "We couldn't find a booking matching that reference and phone number.", cancelLookupAlreadyCancelled: "This booking has already been cancelled.", cancelLookupWindowClosed: "Bookings can only be cancelled up to 2 hours before the appointment. Please contact the salon directly.", cancelLookupSuccessTitle: "Booking cancelled", cancelLookupSuccessBody: "Your booking has been cancelled.", cancelLookupBack: "Back to booking",
+    // Phase 3D — device-local booking memory (en), see the cs block above.
+    myBookingsTitle: "My bookings on this device", myBookingsUse: "Use booking reference", myBookingsSelected: "Selected", myBookingsForget: "Forget", myBookingsNote: "Saved in this browser only. We'll fill in the booking reference for you — you still need to enter your phone number.",
+    // Dedicated cancel-screen validation, see the cs block above.
+    cancelLookupPhoneRequired: "Please enter the phone number you booked with.",
+    cancelLookupReferenceRequired: "Please enter your booking reference.",
   },
   vi: {
     activeForBooking: "Đang mở để đặt lịch", add: "Thêm", addBooking: "Thêm lịch hẹn", addOnsHint: "Có thể thêm vào dịch vụ này. Một số kiểu sẽ kéo dài thời gian hẹn theo thời gian đã ghi.", addOnsSectionTitle: "Vẽ/đính đá (tùy chọn)", addService: "Thêm dịch vụ", addServiceTitle: "Thêm dịch vụ", addToCalendar: "Thêm vào lịch", adjustDay: "Chỉnh ngày", adjustThisDay: "Chỉnh ngày này", allowBookingWeekday: "Cho phép khách đặt lịch vào ngày này trong tuần.", appointment: "Lịch hẹn", appointmentAria: "{start} đến {end}, {name}, {service}", appointmentDetail: "Chi tiết lịch hẹn", availability: "Tình trạng trống", availableStart: "Giờ bắt đầu còn trống", availableToBook: "Đang hoạt động", beforeLive: "Trước khi khai trương", beforeLiveText: "Xác nhận giờ làm việc trong tuần, giờ cuối tuần và danh sách dịch vụ cuối cùng. Sức chứa là số lịch hẹn tiệm có thể nhận cùng lúc. Gửi nhắc lịch tự động chưa được kết nối.", blockNotFound: "Không tìm thấy khoảng chặn", blockNote: "Chặn toàn phần sẽ dùng hết sức chứa. Chặn một phần chỉ đánh dấu một người không rảnh. Các lịch hẹn hiện có vẫn giữ nguyên.", blockRemoved: "Đã xóa khoảng chặn; sức chứa đã trống trở lại", blockTime: "Chặn thời gian", blockUnavailable: "Chặn thời gian không khả dụng", blockedAria: "Đã chặn, {reason}, {start} đến {end}", blockedSuccess: "Đã chặn thời gian không khả dụng", blocks: "Khoảng chặn", book: "Đặt lịch", bookingAdded: "Đã thêm lịch hẹn vào lịch", bookingNotFound: "Không tìm thấy lịch hẹn", bookings: "Lịch hẹn", brandTagline: "đặt lịch tiệm nail", breakReason: "Nghỉ", calendar: "Tháng", calendarCapacity: "Sức chứa: {count}", cancel: "Hủy", cancelBooking: "Hủy lịch hẹn", cancelExplanation: "Lịch hẹn sẽ bị xóa khỏi lịch đang hoạt động. Khung giờ {date} lúc {start}–{end} sẽ trống ngay cho khách khác.", cancelQuestion: "Hủy lịch hẹn?", cancelRelease: "Hủy và giải phóng giờ", capacity: "Sức chứa", capacityCount: "Sức chứa {count}", capacityMany: "{count} lịch hẹn cùng lúc", capacityOf: "{used} / {total}", capacityOne: "1 lịch hẹn mỗi lần", capacityToBlock: "Sức chứa cần chặn", capacityUsed: "Sức chứa đã dùng", chooseAvailableTime: "Chọn giờ còn trống", clientBooking: "Đặt lịch", clientName: "Tên khách", clientView: "Dành cho khách", close: "Đóng", closeDialog: "Đóng hộp thoại", closeTime: "Giờ đóng cửa", closingAfterOpening: "Giờ đóng cửa phải sau giờ mở cửa", confirmed: "Đã xác nhận", dailyUpdated: "Đã cập nhật tình trạng trống trong ngày", date: "Ngày", dayOpenAvailable: "Ngày này đang mở và còn chỗ trống.", daySettingsNote: "Thiết lập này chỉ áp dụng cho ngày này. Sức chứa là số lịch hẹn tiệm có thể nhận cùng lúc. Nếu giảm sức chứa, các lịch hẹn hiện có vẫn giữ nguyên.", demoNotice: "Bản demo tương tác — tên, dịch vụ và lịch chỉ là ví dụ", demoRestored: "Đã khôi phục dữ liệu demo", detailsUpdated: "Đã cập nhật thông tin lịch hẹn", duration: "Thời lượng", durationDetermines: "Thời lượng dịch vụ quyết định những khung giờ khách có thể đặt.", edit: "Sửa", editDetails: "Sửa thông tin", editNote: "Sửa thông tin liên hệ và nhắc lịch ở đây. Dùng Đổi lịch để chuyển giờ hẹn và kiểm tra lại chỗ trống.", editService: "Sửa dịch vụ", endAfterStart: "Giờ kết thúc phải sau giờ bắt đầu", forSalon: "Cho {salon}.", from: "Từ", goToday: "Về hôm nay", hours: "Giờ làm việc", hoursConfigured: "Đã thiết lập giờ làm việc", hoursNotConfigured: "Chưa thiết lập giờ làm việc", hoursNote: "Thiết lập giờ làm việc thường lệ cho ngày này trong tuần. Nếu không thiết lập, ngày sẽ hiển thị là chưa xác định.", hoursTbd: "Giờ mở cửa chưa xác định", inactive: "Ngừng hoạt động", inactiveExisting: "Dịch vụ ngừng hoạt động vẫn giữ nguyên trên các lịch hẹn hiện có.", instagram: "Instagram", instagramUsername: "Tên người dùng Instagram (tùy chọn)", keepBooking: "Giữ lịch hẹn", languageLabel: "Ngôn ngữ", lengthHint: "Chọn độ dài trước khi thêm vẽ/đính đá.", lengthSectionTitle: "Độ dài móng", manualEntry: "Nhập thủ công", manualLengthRequired: "Chọn độ dài móng trước — sau đó các khung giờ trống sẽ hiện ra.", manualNote: "Dùng cho khách vãng lai, gọi điện hoặc nhắn tin Instagram. Áp dụng cùng quy tắc sức chứa như đặt lịch online.", manualRequired: "Nhập tên khách, thông tin liên hệ và giờ còn trống", minutes: "{count} phút", movedReleased: "Đã chuyển từ {old}; giờ cũ đã được giải phóng", nameContactRequired: "Tên và thông tin liên hệ là bắt buộc", newDate: "Ngày mới", next: "Tiếp", noBookings: "Không có lịch hẹn", noBookingsYet: "Chưa có lịch hẹn nào", noValidSlots: "Không có khung giờ {duration} phút nào còn trống trong ngày này.", noWorkingHours: "Không có giờ làm việc", notConfiguredTbd: "Chưa thiết lập", notProvided: "Chưa cung cấp", notebookHome: "Trang chủ N2D", notes: "Ghi chú", notesLabel: "Ghi chú (không bắt buộc)", notesPlaceholder: "Ví dụ: khách muốn gì, hoặc muốn đặt với ai.", off: "Tắt", on: "Bật", open: "Mở cửa", originalHeld: "Giờ hẹn cũ vẫn được giữ cho đến khi bạn lưu thay đổi. Chỉ hiện các khung giờ đủ chỗ cho {duration} phút.", pageTitle: "N2D — Đặt lịch tiệm nail", phone: "Điện thoại", phoneNumber: "Số điện thoại", photoAlt: "Ảnh mẫu tham khảo móng", placeholderName: "Tên", placeholderServiceType: "ví dụ: Bộ móng mới", placeholderVariant: "ví dụ: Có vẽ", previous: "Trước", priceExact: "{price} Kč", priceFrom: "từ {price} Kč", reason: "Lý do", reminder: "Nhắc lịch", reminderEnabled: "Đã bật nhắc lịch", removeBlock: "Xóa khoảng chặn", reschedule: "Đổi lịch", resetConfirm: "Khôi phục lịch demo gốc và xóa toàn bộ thay đổi trên thiết bị này?", resetDemo: "Khôi phục demo", retry: "Thử lại", salon: "Tiệm", salonSettings: "Cài đặt tiệm", saveDay: "Lưu ngày", saveDetails: "Lưu thông tin", saveHours: "Lưu giờ làm việc", saveNewTime: "Lưu giờ mới", saveService: "Lưu dịch vụ", savedLocally: "Đã lưu trên thiết bị này", schedule: "Lịch", selectTime: "Chọn giờ", selectedDay: "Ngày đã chọn", sendingNotConnected: "Gửi nhắc lịch tự động chưa được kết nối", service: "Dịch vụ", serviceChangeNote: "Thay đổi áp dụng cho lịch hẹn mới. Lịch hẹn hiện có vẫn giữ nguyên thời lượng cũ, kể cả khi được đổi lịch.", serviceNameRequired: "Nhập loại dịch vụ và biến thể", serviceSaved: "Đã lưu dịch vụ", serviceType: "Loại dịch vụ", servicesAndDuration: "Dịch vụ & thời lượng", servicesDuration: "Dịch vụ & thời lượng", setHours: "Thiết lập giờ", setHoursHint: "Thiết lập giờ để mở ngày này cho đặt lịch.", setup: "Cài đặt", setupDescription: "Dịch vụ, giờ làm việc và tình trạng trống theo ngày.", source: "Nguồn", sourceClient: "Đặt lịch online", sourceDemo: "Dữ liệu demo", sourceStaff: "Nhân viên thêm", staffAccessDeniedText: "Tài khoản này chưa được thiết lập làm quản lý, nên không có quyền truy cập lịch của tiệm.", staffAccessDeniedTitle: "Không có quyền truy cập", staffActionFailed: "Không thể hoàn tất thao tác. Kiểm tra kết nối mạng và thử lại.", staffCalendar: "Lịch của tiệm", staffCheckingSession: "Đang kiểm tra phiên đăng nhập…", staffEmail: "Email", staffLoadError: "Không thể tải lịch của tiệm. Kiểm tra kết nối mạng và thử lại.", staffLoadingSchedule: "Đang tải lịch của tiệm…", staffLoginFailed: "Đăng nhập thất bại. Kiểm tra lại email và mật khẩu.", staffLoginHint: "Chỉ quản lý mới có quyền truy cập lịch của tiệm.", staffLoginRequired: "Nhập email và mật khẩu", staffLoginTitle: "Đăng nhập nhân viên", staffNotebook: "Dành cho tiệm N2D", staffPassword: "Mật khẩu", staffSignIn: "Đăng nhập", staffSignOut: "Đăng xuất", staffSigningIn: "Đang đăng nhập…", staffWorking: "Đang lưu…", startTime: "Giờ bắt đầu", tbd: "Chưa xác định", time: "Giờ", timeAvailableAgain: "Khung giờ {start}–{end} đã trống trở lại", timeNoLongerAvailable: "Khung giờ này không còn trống nữa", today: "Hôm nay", todayDay: "Hôm nay / ngày", turnOffTbd: "Tắt để đánh dấu ngày này là chưa xác định.", unavailableTime: "Thời gian không khả dụng", until: "Đến", variantOption: "Biến thể / tùy chọn", week: "Tuần", weekOf: "Tuần từ {date}", weeklyHours: "Giờ làm việc trong tuần", weeklyHoursTitle: "Giờ làm việc trong tuần", weeklyUpdated: "Đã cập nhật giờ làm việc trong tuần", workingHours: "Giờ làm việc", savedToServer: "Đã lưu",
@@ -1424,6 +1443,73 @@ function renderCustomerStep() {
 }
 
 // ---------------------------------------------------------------------------
+// Phase 3D — device-local booking memory ("Moje rezervace na tomto zařízení").
+//
+// The salon asked for cancellation without hunting for the reservation number.
+// A phone number alone can never be accepted as proof of ownership (it is public
+// and guessable — anyone could then cancel anyone's booking), so the server
+// still requires the appointment id AND the matching phone number. What changes
+// is only WHERE the reference comes from: the one the customer already received
+// on the confirmation screen is remembered in their own browser, so a returning
+// customer can pick their booking and type just their phone number.
+//
+// Guarantees (see docs/task-1-cancellation-by-phone.md):
+//   * Never a source of truth and never trusted for ownership: the server still
+//     checks the reference + phone + the 2-hour cutoff, exactly as before.
+//   * Stores only what is needed to recognise one's own booking (id, salon,
+//     date/time, service name) — never name, phone, Instagram, notes or photos.
+//   * Past appointments are dropped on read, the list is capped, entries can be
+//     removed by the customer, and it lives in its own localStorage key (never
+//     the staff/demo state key and never Supabase's auth key).
+// ---------------------------------------------------------------------------
+const MY_BOOKINGS_KEY = "n2d-my-bookings-v1";
+const MY_BOOKINGS_LIMIT = 10;
+
+function readMyBookings() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY));
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(e => e && typeof e.id === "string" && typeof e.date === "string" && typeof e.start === "string");
+  } catch (e) {
+    console.warn("Could not read the device-local booking memory", e);
+    return [];
+  }
+}
+// Newest first, capped — the entries most likely to be needed are kept.
+function writeMyBookings(entries) {
+  try {
+    localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(entries.slice(0, MY_BOOKINGS_LIMIT)));
+  } catch (e) {
+    console.warn("Could not save the device-local booking memory", e);
+  }
+}
+// Only future appointments are ever offered: a started/past appointment can no
+// longer be cancelled server-side (the 2-hour cutoff is even stricter), so
+// showing it would only be a dead end. Sorted chronologically for display.
+function upcomingMyBookings() {
+  const now = Date.now();
+  return readMyBookings()
+    .filter(e => new Date(`${e.date}T${e.start}:00`).getTime() > now)
+    .sort((a, b) => `${a.date} ${a.start}`.localeCompare(`${b.date} ${b.start}`));
+}
+function rememberMyBooking(appt) {
+  if (!appt?.id) return;
+  const entry = {
+    id: appt.id, salonId: appt.salonId, date: appt.date, start: appt.start, end: appt.end,
+    serviceName: appt.serviceName, duration: appt.duration,
+  };
+  writeMyBookings([entry, ...readMyBookings().filter(e => e.id !== entry.id)]);
+}
+function forgetMyBooking(id) {
+  if (!id) return;
+  // Case-insensitive: the reference may have been typed by hand (uuids compare
+  // case-insensitively server-side, so the stored entry must be matched the same
+  // way and not left behind after a successful cancellation).
+  const wanted = String(id).toLowerCase();
+  writeMyBookings(readMyBookings().filter(e => String(e.id).toLowerCase() !== wanted));
+}
+
+// ---------------------------------------------------------------------------
 // Phase 3C — customer self-cancellation screen. A separate screen from the
 // 0-5 booking wizard above (reached via ui.customer.view === "cancel", see
 // renderCustomer()), not a new wizard step. Calls the existing
@@ -1455,9 +1541,34 @@ function renderCancelLookup() {
     network: t("bookingNetworkError"),
   }[c.cancelError] || t("bookingNetworkError")) : null;
 
+  // Phase 3D: this device's own remembered bookings (see rememberMyBooking).
+  // Purely a shortcut for filling in the reference; the phone number is always
+  // typed by the customer and matched server-side.
+  const storedBookings = upcomingMyBookings();
+  const storedHtml = !storedBookings.length ? "" : `<div class="field">
+      <span class="field-label">${t("myBookingsTitle")}</span>
+      <div class="my-booking-list">
+        ${storedBookings.map(b => {
+          const selected = b.id === c.cancelAppointmentId;
+          return `<div class="my-booking-row${selected ? " selected" : ""}">
+            <div class="my-booking-main">
+              <strong>${esc(fmtShortDate(b.date))} · ${esc(b.start)}–${esc(b.end)}</strong>
+              <small>${esc(remoteSalonName(b.salonId))}${b.serviceName ? ` · ${esc(b.serviceName)}` : ""}</small>
+            </div>
+            <div class="my-booking-actions">
+              <button type="button" class="quiet-btn" data-action="use-my-booking" data-id="${esc(b.id)}" ${(selected || cancelLookupInFlight) ? "disabled" : ""}>${selected ? t("myBookingsSelected") : t("myBookingsUse")}</button>
+              <button type="button" class="quiet-btn" data-action="forget-my-booking" data-id="${esc(b.id)}" ${cancelLookupInFlight ? "disabled" : ""}>${t("myBookingsForget")}</button>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+      <p class="microcopy">${t("myBookingsNote")}</p>
+    </div>`;
+
   return `<div>
     <p class="eyebrow">${t("cancelBooking")}</p><h1>${t("cancelLookupTitle")}</h1>
     <p class="subtle">${t("cancelLookupHint")}</p>
+    ${storedHtml}
     <div class="field">
       <label for="cancelAppointmentId">${t("bookingReference")}</label>
       <input class="input" id="cancelAppointmentId" placeholder="${t("bookingReferencePlaceholder")}" value="${esc(c.cancelAppointmentId)}" ${cancelLookupInFlight ? "disabled" : ""}>
@@ -1981,7 +2092,13 @@ function blockDetailModal(modal) {
 
 function daySettingsModal(modal) {
   const d = modal.draft;
-  return { title: t("adjustThisDay"), eyebrow: `${salonName(d.salonId)} · ${fmtShortDate(d.date)}`, body: `<div class="inline-note">${t("daySettingsNote")}</div><div class="field"><div class="toggle-line"><span><strong>${t("hoursConfigured")}</strong><span class="microcopy">${t("turnOffTbd")}</span></span><label class="toggle"><input id="dayConfigured" type="checkbox" ${d.configured ? "checked" : ""} aria-label="${t("hoursConfigured")}"><span></span></label></div></div><div class="form-grid"><div class="field"><label for="dayStart">${t("open")}</label><input class="input" id="dayStart" type="time" step="1800" value="${d.start}"></div><div class="field"><label for="dayEnd">${t("closeTime")}</label><input class="input" id="dayEnd" type="time" step="1800" value="${d.end}"></div><div class="field span-2"><label for="dayCapacity">${t("capacity")}</label><select class="select" id="dayCapacity">${[1,2,3,4].map(n => `<option value="${n}" ${n === Number(d.capacity) ? "selected" : ""}>${n === 1 ? t("capacityOne") : t("capacityMany", { count: n })}</option>`).join("")}</select></div></div>`, foot: `<div class="modal-foot"><button class="secondary-btn" data-action="close-modal">${t("cancel")}</button><button class="primary-btn" data-action="save-day-settings" ${staffActionInFlight ? "disabled" : ""}>${staffActionInFlight ? t("staffWorking") : t("saveDay")}</button></div>` };
+  // Same class of fix as serviceModal's duration list: the current value must
+  // always be an option, or a <select> silently shows/saves the first entry. A
+  // salon configured with a capacity above 4 would otherwise be dropped to 1 by
+  // an untouched save of this dialog. For capacities 1–4 the option list is
+  // unchanged.
+  const capacityOptions = [...new Set([1, 2, 3, 4, Number(d.capacity)])].filter(n => Number.isFinite(n) && n > 0).sort((a, b) => a - b);
+  return { title: t("adjustThisDay"), eyebrow: `${salonName(d.salonId)} · ${fmtShortDate(d.date)}`, body: `<div class="inline-note">${t("daySettingsNote")}</div><div class="field"><div class="toggle-line"><span><strong>${t("hoursConfigured")}</strong><span class="microcopy">${t("turnOffTbd")}</span></span><label class="toggle"><input id="dayConfigured" type="checkbox" ${d.configured ? "checked" : ""} aria-label="${t("hoursConfigured")}"><span></span></label></div></div><div class="form-grid"><div class="field"><label for="dayStart">${t("open")}</label><input class="input" id="dayStart" type="time" step="1800" value="${d.start}"></div><div class="field"><label for="dayEnd">${t("closeTime")}</label><input class="input" id="dayEnd" type="time" step="1800" value="${d.end}"></div><div class="field span-2"><label for="dayCapacity">${t("capacity")}</label><select class="select" id="dayCapacity">${capacityOptions.map(n => `<option value="${n}" ${n === Number(d.capacity) ? "selected" : ""}>${n === 1 ? t("capacityOne") : t("capacityMany", { count: n })}</option>`).join("")}</select></div></div>`, foot: `<div class="modal-foot"><button class="secondary-btn" data-action="close-modal">${t("cancel")}</button><button class="primary-btn" data-action="save-day-settings" ${staffActionInFlight ? "disabled" : ""}>${staffActionInFlight ? t("staffWorking") : t("saveDay")}</button></div>` };
 }
 
 function serviceModal(modal) {
@@ -2184,6 +2301,22 @@ document.addEventListener("click", (event) => {
     render();
   }
   if (action === "cancel-lookup-back") { ui.customer.view = "book"; render(); }
+  // Phase 3D: pick one of this browser's own remembered bookings (fills in the
+  // reference only — the phone number is still required) or forget it. Both
+  // only touch the device-local memory and the cancel screen's own fields.
+  if (action === "use-my-booking") {
+    const c = ui.customer;
+    c.view = "cancel";
+    c.cancelAppointmentId = target.dataset.id || "";
+    c.cancelStatus = "idle"; c.cancelError = null; c.cancelResult = null;
+    render();
+  }
+  if (action === "forget-my-booking") {
+    const c = ui.customer;
+    if (c.cancelAppointmentId === target.dataset.id) c.cancelAppointmentId = "";
+    forgetMyBooking(target.dataset.id);
+    render();
+  }
   if (action === "submit-cancel-lookup") submitCancelLookup();
   if (action === "cancel-lookup-done") { ui.customer = freshCustomer(); render(); }
   if (action === "go-today") { ui.selectedDate = todayISO(); render(); }
@@ -2449,6 +2582,10 @@ function confirmCustomerBooking() {
       invalidateRemoteAvailability(c.salonId, c.date);
       customerBookingInFlight = false;
       c.confirmedAppointment = mapRemoteAppointment(row, localPhoto);
+      // Phase 3D: remember this booking's reference in the customer's own
+      // browser, so cancelling later does not require finding the number. The
+      // server still requires the reference AND the matching phone number.
+      rememberMyBooking(c.confirmedAppointment);
       c.step = 5;
       render();
     } catch (err) {
@@ -2486,7 +2623,12 @@ function submitCancelLookup() {
   if (cancelLookupInFlight) return;
   c.cancelAppointmentId = $("#cancelAppointmentId")?.value.trim() || "";
   c.cancelPhone = $("#cancelPhoneInput")?.value.trim() || "";
-  if (!c.cancelAppointmentId || !c.cancelPhone) { showToast(t("requiredContact")); return; }
+  // Cancel-screen-only validation. Splitting the old single check means the
+  // message always names the field that is actually missing, and this screen
+  // never reuses the booking form's "add your name and contact" toast (it does
+  // not ask for a name at all). The booking form's own validation is untouched.
+  if (!c.cancelAppointmentId) { showToast(t("cancelLookupReferenceRequired")); return; }
+  if (!c.cancelPhone) { showToast(t("cancelLookupPhoneRequired")); return; }
   // UX-only: catches obvious typos before a round-trip. The server
   // (cancel_appointment_customer) re-normalizes and is the only authority
   // on whether the phone actually matches the booking.
@@ -2502,6 +2644,9 @@ function submitCancelLookup() {
       cancelLookupInFlight = false;
       c.cancelStatus = "success";
       c.cancelResult = mapRemoteAppointment(row, null);
+      // Phase 3D: the booking is cancelled now, so its device-local shortcut is
+      // stale — drop it so it is never offered again.
+      forgetMyBooking(c.cancelAppointmentId);
       render();
     } catch (err) {
       cancelLookupInFlight = false;
