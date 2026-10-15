@@ -26,10 +26,6 @@ button { color: inherit; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(173,102,85,.25); outline-offset: 2px; }
 button, [data-action] { -webkit-tap-highlight-color: transparent; }
 
-#demoStrip { height: 30px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #eee8df; color: #6f6861; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 10px; letter-spacing: .02em; }
-#demoStrip .demo-dot { width: 6px; height: 6px; border-radius: 99px; background: var(--accent); }
-#demoStrip button { margin-left: 6px; padding: 3px 7px; color: #655d56; border: 1px solid #c9c0b6; border-radius: 6px; background: rgba(255,255,255,.45); font-size: 10px; cursor: pointer; }
-body[data-mode="customer"] #demoStrip { display: none; }
 body[data-mode="customer"] #shell { min-height: 100vh; }
 body[data-mode="customer"] .mode-switch,
 body[data-mode="customer"] .saved-state,
@@ -314,7 +310,6 @@ body.photo-viewer-open { overflow: hidden; }
 @keyframes rise { from { transform: translateY(18px); opacity: .7; } }
 
 @media (min-width: 700px) {
-  #demoStrip { font-size: 12px; }
   .topbar { height: 76px; padding: 0 28px; }
   .brand-mark { width: 38px; height: 37px; }
   .mode-switch { display: flex; }
