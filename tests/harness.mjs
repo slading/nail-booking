@@ -170,11 +170,11 @@ export class App {
   close() { this.w.close(); }
 }
 
-export async function loadApp({ language = "cs", supabase = createFakeSupabase() } = {}) {
+export async function loadApp({ language = "cs", supabase = createFakeSupabase(), url = "http://localhost/" } = {}) {
   // Scripts are NOT executed by jsdom ("outside-only"); we evaluate the real
   // source files ourselves, in the same order index.html loads them.
   const dom = new JSDOM(read("index.html"), {
-    url: "http://localhost/",
+    url,
     runScripts: "outside-only",
     pretendToBeVisual: true,
   });
@@ -185,7 +185,12 @@ export async function loadApp({ language = "cs", supabase = createFakeSupabase()
   const app = new App(dom, supabase);
   app.run(read("supabase-client.js"), "supabase-client.js");
   app.run(read("app.js"), "app.js");
-  await waitUntil(() => app.eval("remoteCatalog.status") === "ready");
+  const normalizedPath = new URL(url).pathname.replace(/\/+$/, "") || "/";
+  if (normalizedPath === "/staff") {
+    await waitUntil(() => app.eval("staffAuthIsReady()"));
+  } else {
+    await waitUntil(() => app.eval("remoteCatalog.status") === "ready");
+  }
   await app.flush();
   return app;
 }

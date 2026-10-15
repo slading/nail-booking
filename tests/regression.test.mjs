@@ -8,6 +8,38 @@ import { loadApp, createFakeSupabase, TINY_JPEG } from "./harness.mjs";
 const DATE = "2026-10-20";
 const START = "10:00";
 
+test("the /staff interface has no demo banner or executable reset control; demo seed data remains defined", async () => {
+  const app = await loadApp({ url: "http://localhost/staff" });
+  try {
+    assert.equal(app.w.location.pathname, "/staff");
+    assert.equal(app.eval("ui.mode"), "staff");
+    assert.equal(app.doc.body.dataset.mode, "staff");
+    assert.equal(app.$("#demoStrip"), null);
+    assert.equal(app.$("#demoNotice"), null);
+    assert.equal(app.$("#resetDemo"), null);
+    assert.doesNotMatch(app.doc.body.textContent, /Interaktivní ukázka|Obnovit ukázku/);
+
+    // A stale/directly inserted reset button must not trigger the old action.
+    let confirmCalls = 0;
+    app.w.confirm = () => { confirmCalls++; return true; };
+    const injectedReset = app.doc.createElement("button");
+    injectedReset.id = "resetDemo";
+    app.doc.body.appendChild(injectedReset);
+    injectedReset.click();
+    injectedReset.remove();
+    await app.flush();
+    assert.equal(confirmCalls, 0);
+    assert.equal(app.w.localStorage.getItem("n2d-salon-prototype-v4"), null);
+    assert.equal(app.toast(), "");
+
+    // Retain the synthetic data factory for potential isolated demo/test use.
+    assert.equal(app.eval("typeof createDemoState"), "function");
+    assert.equal(app.eval('createDemoState().appointments.some(a => a.name === "Anna")'), true);
+  } finally {
+    app.close();
+  }
+});
+
 // Exact strings required by the owner (Vy). Changing them is a product decision.
 const COPY = {
   cs: {
